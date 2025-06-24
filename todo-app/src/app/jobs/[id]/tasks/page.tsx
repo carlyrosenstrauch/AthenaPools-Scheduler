@@ -7,9 +7,10 @@
 // Imports the 'Link' component from 'next/link' for efficient client-side navigation.
 import Link from 'next/link';
 // Imports 'useState' for managing component state and 'useEffect' for side effects from React.
+// Removed 'use' hook as we are no longer using it for params.
 import { useState, useEffect } from 'react';
-// Imports 'useRouter' from 'next/navigation' for routing functionalities in Next.js App Router.
-import { useRouter } from 'next/navigation';
+// Imports 'useRouter' and 'usePathname' from 'next/navigation' for routing functionalities.
+import { useRouter, usePathname } from 'next/navigation'; // <--- Added usePathname here
 
 // Defines a TypeScript interface named 'Task' to describe the structure of a task object.
 interface Task {
@@ -107,12 +108,17 @@ const initialJobs = [
   }
 ];
 
-// Defines the 'JobTasks' functional component, receiving 'params' for dynamic routing.
-export default function JobTasks({ params }: { params: { id: string } }) {
+// Defines the 'JobTasks' functional component.
+// We no longer destructure 'params' here directly.
+export default function JobTasks() { // <--- Removed { params } from props
   // Initializes the router object for navigation within the app.
   const router = useRouter();
-  // Extract the job ID from the params
-  const jobId = params.id;
+  // Gets the current URL pathname (e.g., "/jobs/1")
+  const pathname = usePathname(); // <--- Get pathname
+
+  // Extract the job ID from the URL pathname by splitting the string.
+  // Assuming the URL structure is '/jobs/[id]'
+  const jobId = pathname.split('/')[2]; // <--- Extract jobId from pathname
 
   // Declares a state variable 'job' to hold the current job's data, initially null.
   const [job, setJob] = useState<Job | null>(null);
@@ -250,9 +256,15 @@ export default function JobTasks({ params }: { params: { id: string } }) {
           </div>
         </div>
       </div>
-      <button className="fixed bottom-8 right-8 bg-green-500 text-white text-lg font-semibold py-3 px-6 rounded-full shadow-lg hover:bg-green-600 transition-colors z-50">
+
+      {/* ADDED THE FOLLOWING LINK COMPONENT FOR THE BUTTON */}
+      {/*} Creates a fixed-position button at the bottom right to add a new job.*/}
+      <Link
+        href={`/jobs/${job.id}/tasks/add`} // This link should point to your "add new task" page
+        className="fixed bottom-8 right-8 bg-green-500 text-white text-lg font-semibold py-3 px-6 rounded-full shadow-lg hover:bg-green-600 transition-colors z-50"
+      >
         Add New Task
-      </button>
+      </Link>
     </div>
   );
 }

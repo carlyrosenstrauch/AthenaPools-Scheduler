@@ -3,11 +3,27 @@
 // Imports the Link component from Next.js, used for client-side navigation between pages.
 import Link from 'next/link';
 
+// Define the type for a single task
+interface Task {
+  name: string;
+}
+
+// Define the type for a job
+interface Job {
+  id: string;
+  jobName: string;
+  clientName: string;
+  status: 'In Progress' | 'Scheduled' | 'Overdue';
+  gateCode: string;
+  notes: string;
+  tasks: string[];
+}
+
 // Defines the 'Jobs' component as the default export for this file.
 export default function Jobs() {
   // Declares a constant array named 'jobs' to hold sample job data.
   // In a real application with a backend, this data would be fetched from an API.
-  const jobs = [
+  const jobs: Job[] = [
     // Defines the first job object with various properties.
     {
       id: "1", // Unique identifier for the job.
@@ -39,8 +55,8 @@ export default function Jobs() {
     // Defines the third job object.
     {
       id: "3",
-      jobName: "Emergency Repair - Wilson Pool",
-      clientName: "Mike Wilson",
+      jobName: "Escobedo Pool",
+      clientName: "Y",
       status: "Overdue",
       gateCode: "",
       notes: "",
@@ -51,6 +67,7 @@ export default function Jobs() {
       ]
     }
   ];
+
 
   // Defines a constant object 'statusColors' to map job statuses to Tailwind CSS background colors.
   // 'as const' ensures that the object's properties are read-only and types are inferred narrowly.
